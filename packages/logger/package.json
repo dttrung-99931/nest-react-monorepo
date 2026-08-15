@@ -1,0 +1,39 @@
+{
+  "name": "@panda-chat/logger",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "tsup --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "@nestjs/common": "^11.1.14",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.14",
+    "express": "^5.2.1"
+  },
+  "dependencies": {
+    "@panda-chat/types": "workspace:*"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  }
+}

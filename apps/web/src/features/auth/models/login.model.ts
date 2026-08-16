@@ -1,4 +1,4 @@
 export type LoginModel = {
-  userId: string,
-  token: string,
-}
+  userId: string;
+  token: string;
+};

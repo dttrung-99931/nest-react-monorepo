@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { database } from '@panda-chat/database';
+import { database } from '@monorepo/database';
 import { BaseService } from 'src/base/base.service';
 import { PermissionResponse } from '../permission/dtos/permission.response';
 import { AssignPermissionsRequest } from './dtos/assign-permissions.request';
@@ -46,12 +46,12 @@ export class RoleService extends BaseService {
     roleId,
     permissionIds,
   }: AssignPermissionsRequest): Promise<void> => {
-    await database.rolePermissions.deleteMany({
+    await database.rolePermission.deleteMany({
       where: {
         roleId: roleId,
       },
     });
-    await database.rolePermissions.createMany({
+    await database.rolePermission.createMany({
       data: permissionIds.map((permissionId) => ({
         // RolePermissions.id has no default value, so build a deterministic one
         id: `${roleId}:${permissionId}`,

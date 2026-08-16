@@ -1,5 +1,5 @@
 {
-  "name": "@panda-chat/logger",
+  "name": "@monorepo/logger",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -21,7 +21,7 @@
     "express": "^5.2.1"
   },
   "dependencies": {
-    "@panda-chat/types": "workspace:*"
+    "@monorepo/types": "workspace:*"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

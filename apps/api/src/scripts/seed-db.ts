@@ -1,4 +1,4 @@
-import { database } from '@panda-chat/database';
+import { database } from '@monorepo/database';
 import { allPermissions } from 'src/modules/permission/models/permission.model';
 import { allRoles } from 'src/modules/permission/models/role.model';
 

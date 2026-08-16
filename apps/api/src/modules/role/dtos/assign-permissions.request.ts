@@ -8,6 +8,6 @@ export class AssignPermissionsRequest {
 
   @IsArray()
   @IsString({ each: true })
-  @ApiProperty({ example: ['chat:view', 'chat:join'] })
+  @ApiProperty({ example: ['user:view', 'user:edit'] })
   permissionIds: string[];
 }

@@ -50,10 +50,10 @@ export type User = Prisma.UserModel
  */
 export type Role = Prisma.RoleModel
 /**
- * Model RolePermissions
+ * Model RolePermission
  * 
  */
-export type RolePermissions = Prisma.RolePermissionsModel
+export type RolePermission = Prisma.RolePermissionModel
 /**
  * Model Permission
  * 

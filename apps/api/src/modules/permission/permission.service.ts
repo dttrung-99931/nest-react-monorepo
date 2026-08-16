@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { database } from '@panda-chat/database';
+import { database } from '@monorepo/database';
 import { BaseService } from 'src/base/base.service';
 import { GetPermissionsRequest } from './dtos/get-permissions.request';
 import { PermissionResponse } from './dtos/permission.response';

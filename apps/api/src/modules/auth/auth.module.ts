@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { AuthGuard } from 'src/decorators/auth.guard';
+import { ApiAuthGuard } from 'src/decorators/auth/api-auth.guard';
 import { PermissionGuard } from 'src/decorators/permission.guard';
 import { RoleModule } from '../role/role.module';
 import { RoleService } from '../role/role.service';
@@ -7,6 +7,7 @@ import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { HashService } from './hash.service';
 
 @Module({
   imports: [forwardRef(() => UserModule), forwardRef(() => RoleModule)],
@@ -15,9 +16,16 @@ import { AuthService } from './auth.service';
     UserService,
     RoleService,
     AuthService,
-    AuthGuard,
+    HashService,
+    ApiAuthGuard,
     PermissionGuard,
   ],
-  exports: [UserService, RoleService, AuthService, AuthGuard, PermissionGuard],
+  exports: [
+    UserService,
+    RoleService,
+    AuthService,
+    ApiAuthGuard,
+    PermissionGuard,
+  ],
 })
 export class AuthModule {}

@@ -1,5 +1,5 @@
 {
-  "name": "panda-chat",
+  "name": "panda-monorepo",
   "private": true,
   "scripts": {
     "build": "turbo run build",

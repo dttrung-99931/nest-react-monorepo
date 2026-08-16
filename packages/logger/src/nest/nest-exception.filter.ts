@@ -1,5 +1,5 @@
 import { ArgumentsHost, ExceptionFilter } from "@nestjs/common";
-import { BaseResponse, Exception } from "@panda-chat/types";
+import { BaseResponse, Exception } from "@monorepo/types";
 import { Request, Response } from "express";
 
 export class NestExceptionFilter implements ExceptionFilter {

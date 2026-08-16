@@ -12,30 +12,48 @@ datasource db {
 }
 
 model User {
-  id       String @id
-  nickname String
-  roleId   String
-  role     Role   @relation(fields: [roleId], references: [id])
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Users")
 }
 
 model Role {
-  id              String            @id
+  id              String           @id
   name            String
   users           User[]
-  rolePermissions RolePermissions[] @relation("RoleToRolePermission")
+  rolePermissions RolePermission[] @relation("RoleToRolePermission")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("Roles")
 }
 
-model RolePermissions {
+model RolePermission {
   id           String     @id
   roleId       String
   role         Role       @relation("RoleToRolePermission", fields: [roleId], references: [id])
   permissionId String
   permission   Permission @relation("PermissionToRolePermissions", fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("RolePermissions")
 }
 
 model Permission {
   id   String @id
   name String
 
-  rolePermissions RolePermissions[] @relation("PermissionToRolePermissions")
+  rolePermissions RolePermission[] @relation("PermissionToRolePermissions")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("Permissions")
 }
+

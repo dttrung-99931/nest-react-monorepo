@@ -1,15 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateUserRequest {
+  @IsOptional()
   @IsString()
-  @ApiProperty({ example: 'b7e61455-ca43-4e63-b216-fbb92b9bb8ba' })
-  id: string;
+  @ApiProperty({ example: 'b7e61455-ca43-4e63-b216-fbb92b9bb8ba', required: false })
+  id?: string;
+
+  @IsEmail()
+  @ApiProperty({ example: 'john@example.com' })
+  email: string;
 
   @IsString()
-  @MinLength(2, { message: 'User length must be at least 2' })
-  @ApiProperty({ example: 'john' })
-  nickname: string;
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  @ApiProperty({ example: 'secret123' })
+  password: string;
 
   @IsString()
   @ApiProperty({ example: 'user' })

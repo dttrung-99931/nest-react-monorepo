@@ -1,4 +1,4 @@
-import { RoleResponseDto } from '@panda-chat/types';
+import { RoleResponseDto } from '@monorepo/types';
 import { LoginJwtPayloadModel } from './jwt-payload.model';
 import { PermissionModel } from 'src/modules/permission/models/permission.model';
 

@@ -1,159 +1,65 @@
-# Turborepo starter
+# NestJS ReactJS Monorepo Source Base
 
-This Turborepo starter is maintained by the Turborepo core team.
+pnpm + Turborepo starter: NestJS HTTP API + Vite React web app, with shared types, UI, and Prisma.
 
-## Using this example
+## Monorepo structure
 
-Run the following command:
+| Path                                           | Role                              |
+| ---------------------------------------------- | --------------------------------- |
+| `apps/api`                                     | NestJS HTTP API                   |
+| `apps/web`                                     | Vite + React SPA                  |
+| `packages/types`                               | Zod DTOs + exceptions (api + web) |
+| `packages/database`                            | Prisma schema, client, sqlite     |
+| `packages/ui`                                  | shadcn/Base UI atoms              |
+| `packages/common`                              | shared zod re-export              |
+| `packages/logger`                              | Nest exception filter             |
+| `packages/typescript-config` / `eslint-config` | tooling                           |
 
-```sh
-npx create-turbo@latest
-```
+## Tech stack
 
-## What's inside?
+- **api:** Nest 11, nestjs-zod, Prisma 7, JWT, Swagger, Redis cache
+- **web:** React 19, Vite, TanStack Router / Query / Form, axios, Tailwind 4, Zod
+- **ui:** shadcn + `@base-ui/react`, `make add-comp <name>`
 
-This Turborepo includes the following packages/apps:
+## Scripts
 
-### Apps and Packages
+- `pnpm dev` — run api + web
+- `pnpm build` — build the workspace
+- API Swagger: `/swagger`
+- Seed roles/permissions: `pnpm --filter @monorepo/api db:seed`
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@panda-chat/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@panda-chat/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## apps/api — structure
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- `src/modules/<feature>` — module, controller extends `BaseAuthController`, service extends `BaseService`
+- `src/base` — shared controller/service helpers
+- `src/decorators` — auth and permission guards
 
-### Utilities
+## apps/api — add a feature
 
-This Turborepo has some additional tools already setup for you:
+1. Design tables
+2. Update [`packages/database/prisma/schema.prisma`](packages/database/prisma/schema.prisma)
+3. Migrate (`packages/database` script `db:migrate-name`)
+4. Declare Zod DTOs in `packages/types` (shared with web)
+5. Controller: `createZodDto(schema)` + `handleRequest`
+6. Service: Prisma via `database` from `@monorepo/database`
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## apps/web — structure
 
-### Build
+- `src/routes` — file routes
+- `src/features/<name>/{pages,hooks,models,services,mappers,components}`
+- `src/shared` — hooks/base, api, storage
 
-To build all apps and packages, run the following command:
+## apps/web — add a feature
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+1. Create route under `src/routes`
+2. Create page under `features/<name>/pages`
+3. Feature models (`FooModel`; request `GetFoosModel`)
+4. Service interface returns models (`BaseResponseModel<T>`); impl maps DTOs
+5. Hooks `useGetX` / `useCreateX` via `useAppQuery` / `useAppMutation`
+6. UI from models; reuse `packages/ui`; missing component → `make add-comp $(name)` (see [shadcn Base components](https://ui.shadcn.com/docs/components/base/button))
 
-```sh
-cd my-turborepo
-turbo build
-```
+## DTO / model naming
 
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- `FooResponseDto` → `FooModel`
+- `GetFoosRequestDto` → `GetFoosModel`
+- Hooks and UI must not import `*Dto` except form Zod schemas

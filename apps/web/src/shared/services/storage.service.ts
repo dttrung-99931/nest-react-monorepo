@@ -1,4 +1,4 @@
-import type { LoginResponseDto } from "@panda-chat/types";
+import type { LoginModel } from "../../features/auth/models/login.model";
 
 export const STORAGE_KEYS = {
   KEY_LOGIN: "login",
@@ -19,12 +19,17 @@ class StorageService {
     localStorage.removeItem(key);
   }
 
-  getLogin(): LoginResponseDto | null {
+  getLogin(): LoginModel | null {
     const login = localStorage.getItem(STORAGE_KEYS.KEY_LOGIN);
-    return login ? (JSON.parse(login) as LoginResponseDto) : null;
+    return login ? (JSON.parse(login) as LoginModel) : null;
   }
 
-  setLogin(login: LoginResponseDto): void {
+  getUserId(): string | null {
+    const login = this.getLogin();
+    return login?.userId ?? null;
+  }
+
+  setLogin(login: LoginModel): void {
     localStorage.setItem(STORAGE_KEYS.KEY_LOGIN, JSON.stringify(login));
   }
 

@@ -20,7 +20,7 @@ const adminRole: RoleModel = {
 const userRole: RoleModel = {
   id: 'user',
   name: 'User',
-  permissions: [permissions.chat.join, permissions.chat.view],
+  permissions: [permissions.user.view],
 };
 
 const allRoles: RoleModel[] = [adminRole, userRole];

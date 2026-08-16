@@ -2,6 +2,6 @@ import { RoleResponseDto } from "..";
 
 export type UserResponseDto = {
   id: string;
-  username: string;
+  email: string;
   role: RoleResponseDto;
 };

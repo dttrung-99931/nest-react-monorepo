@@ -1,4 +1,4 @@
-export default interface SignUpResponseDto {
+export type SignUpResponseDto = {
   userId: string;
   token: string;
-}
+};

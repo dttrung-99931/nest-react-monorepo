@@ -1,49 +1,54 @@
-import {
-  BaseResponse,
-  loginSchema,
-  type LoginRequestDto,
-  type LoginResponseDto,
-} from "@panda-chat/types";
-import { useForm } from "@tanstack/react-form";
-import { useAuth } from "../../../shared/hooks/useAuth";
-import type { UseFormResult } from "../../../shared/model/hooks/use-form.model";
-import { storageService } from "../../../shared/services/storage.service";
-import { useLoginApi } from "./useLoginApi";
+import { loginSchema } from "@monorepo/types";
 import { useNavigate } from "@tanstack/react-router";
-import { showErrorToast } from "../../../utils/toast";
+import { useEffect } from "react";
+import {
+  useAppForm,
+  type UseFormResult,
+} from "../../../shared/hooks/base/useAppForm";
+import { useAppMutation } from "../../../shared/hooks/base/useAppMutation";
+import { useAuth } from "../../../shared/hooks/useAuth";
+import type { LoginRequestModel } from "../models/login-request.model";
+import type { LoginModel } from "../models/login.model";
+import { authService } from "../services/auth.service";
 
-export function useLoginForm(): UseFormResult<LoginRequestDto> {
+type UseLoginFormParams = {
+  defaultEmail?: string;
+};
+
+export function useLoginForm(
+  params?: UseLoginFormParams,
+): UseFormResult<LoginRequestModel> {
   const { setLogin } = useAuth();
   const navigate = useNavigate();
-  const { isLoading, mutate } = useLoginApi({
-    onSuccess: (data: BaseResponse<LoginResponseDto>) => {
-      if (data.data) {
-        setLogin(data.data);
-        navigate({
-          to: "/",
-        });
-      }
-    },
-    onError: (exception) => {
-      showErrorToast(String(exception.message));
+  const { isLoading, mutate } = useAppMutation<LoginRequestModel, LoginModel>({
+    mutationFn: (request) => authService.login(request),
+    onSuccess: (data: LoginModel) => {
+      setLogin(data);
+      navigate({
+        to: "/",
+      });
     },
   });
 
-  const form = useForm({
-    validators: {
-      onChange: loginSchema,
-    },
+  const { form } = useAppForm<LoginRequestModel>({
+    schema: loginSchema,
     defaultValues: {
-      nickname: "",
-      userDeviceUUID: storageService.getDeviceUUID(),
-    } satisfies LoginRequestDto,
+      email: params?.defaultEmail ?? "",
+      password: "",
+    },
     onSubmit: ({ value }) => {
       mutate(value);
     },
   });
 
+  useEffect(() => {
+    if (params?.defaultEmail) {
+      form.setFieldValue("email", params.defaultEmail);
+    }
+  }, [form, params?.defaultEmail]);
+
   return {
-    form,
+    form: form,
     isLoading,
   };
 }

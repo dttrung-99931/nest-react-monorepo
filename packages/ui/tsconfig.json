@@ -1,5 +1,5 @@
 {
-  "extends": "@panda-chat/typescript-config/react-library.json",
+  "extends": "@monorepo/typescript-config/react-library.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",

@@ -1,5 +1,5 @@
-import { Prisma, PrismaClientKnownRequestError } from '@panda-chat/database';
-import { Exception, prismaErrorCodes } from '@panda-chat/types';
+import { Prisma, PrismaClientKnownRequestError } from '@monorepo/database';
+import { Exception, prismaErrorCodes } from '@monorepo/types';
 
 export class BaseService {
   async handleError<T>(action: () => Promise<T>): Promise<T> {

@@ -1,5 +1,5 @@
-import { ZodError } from '@panda-chat/common';
-import { BaseResponse, Exception } from '@panda-chat/types';
+import { ZodError } from '@monorepo/common';
+import { BaseResponse, Exception } from '@monorepo/types';
 
 export abstract class BaseController {
   /**
@@ -17,7 +17,7 @@ export abstract class BaseController {
         return BaseResponse.error(e);
       }
       if (e instanceof ZodError) {
-        return BaseResponse.badRequest(e.issues);
+        return BaseResponse.badRequest(e.message);
       }
       return BaseResponse.unkonwnError(String(e));
     }

@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Exception } from '@panda-chat/types';
+import { Exception } from '@monorepo/types';
 import { AuthRequest } from 'src/modules/auth/models/auth.request';
 import {
   REQUIRE_ANY_PERMISSIONS_KEY,

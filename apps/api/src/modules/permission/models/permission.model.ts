@@ -5,16 +5,6 @@ export type PermissionModel = {
 };
 
 export const permissions = {
-  chat: {
-    view: {
-      id: 'chat:view',
-      name: 'View chat',
-    },
-    join: {
-      id: 'chat:join',
-      name: 'Join chat',
-    },
-  },
   user: {
     view: {
       id: 'user:view',
@@ -30,6 +20,4 @@ export const permissions = {
 export const allPermissions: Array<PermissionModel> = [
   permissions.user.edit,
   permissions.user.view,
-  permissions.chat.join,
-  permissions.chat.view,
 ];

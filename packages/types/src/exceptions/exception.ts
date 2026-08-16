@@ -1,7 +1,7 @@
 import { ErrorCode } from "./error-codes";
 
-export type ExceptionMessageType = unknown;
-export abstract class Exception {
+export type ExceptionMessageType = string;
+export class Exception {
   // field just for mark this object is Exception type
   // @ts-ignore
   private readonly _isException = true;
@@ -11,10 +11,13 @@ export abstract class Exception {
     return rest;
   }
 
-  constructor(
-    public readonly errorCode: ErrorCode,
-    public readonly message: ExceptionMessageType,
-  ) {}
+  public readonly errorCode: ErrorCode;
+  public readonly message: ExceptionMessageType;
+
+  constructor(errorCode: ErrorCode, message: ExceptionMessageType) {
+    this.errorCode = errorCode;
+    this.message = message;
+  }
 
   static isException(ex: any): ex is Exception {
     return (

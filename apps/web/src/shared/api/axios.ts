@@ -1,5 +1,5 @@
 import axios, { AxiosError, type AxiosResponse } from "axios";
-import type { BaseResponse } from "@panda-chat/types";
+import type { BaseResponse } from "@monorepo/types";
 import { showErrorToast } from "../../utils/toast";
 import { storageService } from "../services/storage.service";
 
@@ -38,31 +38,40 @@ async function handleResponseError<T>(
   response: AxiosResponse<BaseResponse<T>, any, {}>,
 ) {
   const apiUrl = response.config.url;
-  const isLoginApi = apiUrl?.includes("auth/login");
+  const isAuthApi =
+    apiUrl?.includes("auth/login") || apiUrl?.includes("auth/signup");
   // Back to /login on 401
-  if (response.status === 401 && !isLoginApi) {
+  if (response.status === 401 && !isAuthApi) {
     console.log("Logut");
     await storageService.removeLogin();
     // Lazy import router that prevent import circle
     // router -> page -> service -> axious -> router
-    // const { router } = await import("../../router");
-    // router.navigate({
-    //   to: "/login",
-    //   search: {
-    //     cancelAutoHomeRedirect: true,
-    //   },
-    // });
+    const { router } = await import("../../router");
+    router.navigate({
+      to: "/login",
+      search: {
+        cancelAutoHomeRedirect: true,
+      },
+    });
     showErrorToast("Login session expired. Please login again.");
     return;
   }
 
   // Throw other error
-  if (response.data.error && response.status != 401) {
+  if (response.data.error) {
     throw response.data.error;
   }
 }
 
 function handleUnknownError(error: AxiosError<unknown, any>) {
+  switch (error.code) {
+    case "ERR_NETWORK":
+      showErrorToast("Network Error. Please login again.");
+      break;
+    default:
+      showErrorToast("Opps. Unexpected error occured.");
+      break;
+  }
   console.error(error);
 }
 

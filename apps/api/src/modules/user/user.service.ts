@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { database } from '@panda-chat/database';
-import { Exception } from '@panda-chat/types';
+import { database } from '@monorepo/database';
+import { Exception } from '@monorepo/types';
 import { BaseService } from 'src/base/base.service';
 import { HashService } from '../auth/hash.service';
 import { CreateUserRequest } from './dtos/create-user.request';
@@ -14,18 +14,26 @@ export class UserService extends BaseService {
     super();
   }
 
-  async getAll(request: GetUsersRequest): Promise<Array<UserResponse>> {
+  private toUserResponse(user: {
+    id: string;
+    email: string;
+    role: UserResponse['role'];
+  }): UserResponse {
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
+  async getAll(_request: GetUsersRequest): Promise<Array<UserResponse>> {
     const users = await database.user.findMany({
       include: {
         role: true,
       },
     });
 
-    return users.map((user) => ({
-      id: user.id,
-      role: user.role,
-      nickname: user.nickname,
-    }));
+    return users.map((user) => this.toUserResponse(user));
   }
 
   async getById(id: string): Promise<UserResponse> {
@@ -45,30 +53,40 @@ export class UserService extends BaseService {
       });
     }
 
-    return user;
+    return this.toUserResponse(user);
   }
 
   async create(request: CreateUserRequest): Promise<UserResponse> {
-    return database.user.create({
-      data: request,
+    const user = await database.user.create({
+      data: {
+        id: request.id,
+        email: request.email,
+        password: await this.hashService.hash(request.password),
+        roleId: request.roleId,
+      },
       include: {
         role: true,
       },
     });
+    return this.toUserResponse(user);
   }
 
   async update(user: UpdateUserRequest): Promise<UserResponse> {
-    return database.user.update({
+    const updated = await database.user.update({
       where: {
         id: user.id,
       },
       data: {
-        nickname: user.nickname,
+        email: user.email,
         roleId: user.roleId,
+        ...(user.password
+          ? { password: await this.hashService.hash(user.password) }
+          : {}),
       },
       include: {
         role: true,
       },
     });
+    return this.toUserResponse(updated);
   }
 }

@@ -1,34 +1,15 @@
-import axiosInstance from "../../../shared/api/axios";
-import type {
-  BaseResponse,
-  LoginRequestDto,
-  LoginResponseDto,
-} from "@panda-chat/types";
+import type { BaseResponseModel } from "../../../shared/model/base/base-response.model";
+import type { LoginRequestModel } from "../models/login-request.model";
+import type { LoginModel } from "../models/login.model";
+import type { SignUpRequestModel } from "../models/sign-up-request.model";
+import { AuthServiceImpl } from "./auth.service.impl";
 
-import { storageService } from "../../../shared/services/storage.service";
-
-class AuthService {
-  getLogin(): LoginResponseDto | null {
-    return storageService.getLogin();
-  }
-
-  saveLogin(login: LoginResponseDto) {
-    storageService.setLogin(login);
-  }
-
-  async login(
-    request: LoginRequestDto,
-  ): Promise<BaseResponse<LoginResponseDto>> {
-    const res: BaseResponse<LoginResponseDto> = await axiosInstance.post(
-      "/auth/login",
-      request,
-    );
-    return res;
-  }
-
-  logout = async () => {
-    storageService.removeLogin();
-  };
+export interface AuthService {
+  getLogin(): LoginModel | null;
+  saveLogin(login: LoginModel): void;
+  login(request: LoginRequestModel): Promise<BaseResponseModel<LoginModel>>;
+  signUp(request: SignUpRequestModel): Promise<BaseResponseModel<LoginModel>>;
+  logout(): Promise<void>;
 }
 
-export const authService = new AuthService();
+export const authService: AuthService = new AuthServiceImpl();

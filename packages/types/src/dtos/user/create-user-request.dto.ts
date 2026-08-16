@@ -2,8 +2,8 @@ import z from "zod";
 
 export const CreateUserScheme = z.object({
   id: z.string().optional(),
-  username: z.string().min(2, "User length must be at least 2"),
-  password: z.string().min(2, "Password length must be at least 2"),
+  email: z.email({ message: "Valid email is required" }),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   roleId: z.string(),
 });
 

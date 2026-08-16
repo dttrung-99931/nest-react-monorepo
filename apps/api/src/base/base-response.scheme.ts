@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 import { getSchemaPath } from '@nestjs/swagger';
-import { ErrorCode } from '@panda-chat/types';
+import { ErrorCode } from '@monorepo/types';
 
 // return swagger schema for type BaseResponse<TItem>
 // where TItem type of response object

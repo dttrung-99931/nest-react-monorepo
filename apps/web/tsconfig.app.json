@@ -1,5 +1,5 @@
 {
-  "extends": "@panda-chat/typescript-config/react-library.json",
+  "extends": "@monorepo/typescript-config/react-library.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
@@ -23,7 +23,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
     // "paths": {
-    //   "@panda-chat/ui/*": ["../../packages/ui/src/*"]
+    //   "@monorepo/ui/*": ["../../packages/ui/src/*"]
     // }
   },
   "include": ["src"]

@@ -1,8 +1,8 @@
-import z from "zod";
+import { z } from "zod";
 
-export const SignUpScheme = z.object({
-  username: z.string().min(3),
-  password: z.string().min(6),
+export const signUpSchema = z.object({
+  email: z.email({ message: "Valid email is required" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
-export type SignUpRequestDto = z.infer<typeof SignUpScheme>;
+export type SignUpRequestDto = z.infer<typeof signUpSchema>;

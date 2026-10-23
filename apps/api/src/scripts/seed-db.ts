@@ -1,9 +1,14 @@
 import { database } from '@monorepo/database';
 import { allPermissions } from 'src/modules/permission/models/permission.model';
-import { allRoles } from 'src/modules/permission/models/role.model';
+import {
+  adminRole,
+  allRoles,
+  userRole,
+} from 'src/modules/permission/models/role.model';
+import bcrypt from 'bcrypt';
 
 async function seedDb() {
-  // Upsert permissions
+  // Permissions
   for (const permission of allPermissions) {
     const createdPermission = await database.permission.upsert({
       where: {
@@ -20,7 +25,7 @@ async function seedDb() {
     console.log('created permission:', createdPermission);
   }
 
-  // Upsert roles with their permissions
+  // Roles
   for (const role of allRoles) {
     const rolePermissions = role.permissions.map((permission) => ({
       // RolePermissions.id has no default value, so build a deterministic one
@@ -52,6 +57,38 @@ async function seedDb() {
       },
     });
     console.log('created role:', createdRole);
+  }
+
+  // Users
+  const users = [
+    // Admin
+    {
+      id: '1',
+      email: 'admin@example.com',
+      // Hash password with 10 rounds of salt, same in HashService.ROUNDS
+      password: await bcrypt.hash('aa123456', 10),
+      roleId: adminRole.id,
+    },
+    // User
+    {
+      id: '2',
+      email: 'user@example.com',
+      password: await bcrypt.hash('aa123456', 10),
+      roleId: userRole.id,
+    },
+  ];
+
+  for (const user of users) {
+    await database.user.upsert({
+      where: { id: user.id },
+      create: {
+        ...user,
+      },
+      update: {
+        ...user,
+      },
+    });
+    console.log('created user:', user);
   }
 }
 

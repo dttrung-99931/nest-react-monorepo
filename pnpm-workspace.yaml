@@ -3,4 +3,10 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - '@prisma/engines'
+  - '@scarf/scarf'
+  - bcrypt
+  - better-sqlite3
+  - esbuild
   - prisma
+  - unrs-resolver
